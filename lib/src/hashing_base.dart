@@ -1,34 +1,66 @@
-import 'dart:io';
-import 'dart:typed_data';
-import 'dart:core';
-import 'package:image/image.dart' as img;
-import 'utils/logger.dart';
-import 'utils/image_utils.dart';
-// import '../../utils/general_utils.dart';
-// import '../../handlers/deduplicator.dart';
+import "dart:core";
+import "dart:io";
+import "dart:typed_data";
+import "package:image/image.dart" as img;
+import "utils/image_utils.dart";
+import "utils/logger.dart";
 
-final loggerHash = returnLogger("HashingBase");
+final loggerHash = returnLogger("Hashing");
 
+/// A base class for generating perceptual image hashes.
+///
+/// This class provides the foundational structure for creating image hashes
+/// by processing images into a standardized format and then applying a
+/// hashing algorithm implemented in subclasses. Subclasses must override
+/// [hashAlgo] to define the specific hashing strategy.
+///
+/// The target image size for hashing is set to 8x8 pixels by default, and
+/// images are converted to grayscale before processing.
+///
+/// Example:
+/// ```dart
+/// class MyHasher extends Hashing {
+///   @override
+///   int hashAlgo(Uint8List imageArray) {
+///     // Custom hashing algorithm implementation
+///   }
+/// }
+/// ```
 class Hashing {
-  static List<int> targetSize = [8, 8];
+  /// Target size for image preprocessing (width, height)
+  final List<int> targetSize = [8, 8];
   final bool _verbose;
 
+  /// Creates a [Hashing] instance with optional verbose logging.
+  ///
+  /// [verbose]: When `true`, enables detailed logging for debugging purposes.
+  /// Defaults to `true`.
   Hashing({bool verbose = true}) : _verbose = verbose;
 
+  /// Generates a perceptual hash for the image at the given file path.
+  ///
+  /// The image is resized to [targetSize], converted to grayscale, and 
+  /// processed through the hashing algorithm defined in [hashAlgo].
+  ///
+  /// [imageFile]: The path to the image file. Must be a valid file system path.
+  ///
+  /// Returns a 16-character hex-hash string, or `null` if processing fails.
+  ///
+  /// Throws:
+  /// - [ArgumentError] if the image file does not exist.
+  /// - [img.ImageException] if image decoding fails.
+  ///
+  /// Example:
+  /// ```dart
+  /// final hasher = Hashing();
+  /// final hash = hasher.encodeImage("path/to/image.jpg");
+  /// if (hash != null) {
+  ///   print("Image hash: $hash");
+  /// }
+  /// ```
   String? encodeImage(String imageFile) {
-    /// 生成单张图像的哈希值（仅支持文件路径输入）
-    ///
-    /// [imageFile] 图像文件路径（必须存在）
-    ///
-    /// 返回：16字符的十六进制哈希字符串
-    ///
-    /// 示例：
-    /// ```dart
-    /// final hasher = Hashing();
-    /// final hash = hasher.encodeImage('path/to/image.jpg');
-    /// ```
     if (!File(imageFile).existsSync()) {
-      throw ArgumentError('Image file does not exist: $imageFile');
+      throw ArgumentError("Image file does not exist: $imageFile");
     }
 
     try {
@@ -40,91 +72,51 @@ class Hashing {
       return hashFunc(image);
     } on img.ImageException catch (e) {
       if (_verbose) {
-        loggerHash.severe('Decoding failed: ${e.message}');
+        loggerHash.severe("Decoding failed: ${e.message}");
       }
       return null;
     }
   }
 
-  // // Future<Map<String, String>> encodeImages(String imageDir, {bool recursive = false, int workers = 4}) async {
-  // Map<String, String> encodeImages(String imageDir, {bool recursive = false}) {
-  //   var directory = Directory(imageDir);
-  //   if (!directory.existsSync()) {
-  //     throw ArgumentError('Please provide a valid directory path!');
-  //   }
-
-  //   List<String> filePaths = generateFiles(directory, recursive);
-
-  //   if (_verbose) {
-  //     loggerHash.info('Start: Calculating hashes...');
-  //   }
-
-  //   // TODO: Make this parallelized
-  //   // List<String?> hashes = await parallelise(filePaths, workers);
-  //   final Map<String, String> hashMap = {};
-  //   for (var file in filePaths) {
-  //     var _encode = encodeImage(file);
-  //     if (_encode != null) hashMap[file] = _encode;
-  //   }
-
-  //   if (_verbose) {
-  //     loggerHash.info('End: Calculating hashes!');
-  //   }
-  //   return hashMap;
-  // }
-
+  /// Processes the image array through the hashing algorithm and converts the result.
+  ///
+  /// This method coordinates the hashing process by:
+  /// 1. Calling [hashAlgo] to compute the hash value
+  /// 2. Converting the numerical result to a hexadecimal string
+  ///
+  /// [imageArray]: The processed image data in grayscale 8x8 format as a Uint8List.
+  ///
+  /// Returns the hexadecimal hash string representation of the hash value.
   String hashFunc(Uint8List imageArray) {
     final hashVal = hashAlgo(imageArray);
     return Hashing.array2Hash(hashVal);
   }
 
+  /// Abstract method defining the core hashing algorithm.
+  ///
+  /// Subclasses must implement this method to provide the specific logic for
+  /// converting image pixel data into a hash value.
+  ///
+  /// [imageArray]: The processed image data in grayscale 8x8 format as a Uint8List.
+  ///
+  /// Returns an integer value representing the computed hash.
+  ///
+  /// Throws:
+  /// - [UnimplementedError] if not overridden by a subclass.
   int hashAlgo(Uint8List imageArray) {
-    throw UnimplementedError('Child must implement hashAlgo');
+    throw UnimplementedError("Subclasses must implement hashAlgo");
   }
 
+  /// Converts a numerical hash value to a 16-character hexadecimal string.
+  ///
+  /// The conversion ensures the resulting string is always 16 characters long,
+  /// padding with leading zeros if necessary.
+  ///
+  /// [hashVal]: The integer hash value to convert.
+  ///
+  /// Returns the hexadecimal representation as a fixed-length 16-character string.
   static String array2Hash(int hashVal) {
     final hexString = hashVal.toRadixString(16);
-    return hexString;
+    return hexString.padLeft(16, "0");
   }
-
-  // Map<String, dynamic> findDuplicates(
-  //   Map<String, String> encodingMap, {
-  //   int maxDistanceThreshold = 10,
-  //   bool scores = false,
-  //   // String? outfile, // TODO: get output json later
-  //   // String searchMethod = 'brute_force',
-  //   String searchMethod = 'bktree',
-  // }) {
-  //   if (_verbose) {
-  //     loggerHash.info(
-  //       'Start: Evaluating hamming distances for getting duplicates',
-  //     );
-  //   }
-
-  //   final resultsSet = HashEval(
-  //     test: encodingMap,
-  //     queries: encodingMap,
-  //     distanceFunction: hammingDistance,
-  //     verbose: _verbose,
-  //     threshold: maxDistanceThreshold,
-  //     searchMethod: searchMethod,
-  //   );
-  //   final results = resultsSet.retrieveResults(scores: scores);
-
-  //   if (_verbose) {
-  //     loggerHash.info(
-  //       'End: Evaluating hamming distances for getting duplicates',
-  //     );
-  //   }
-
-  //   // if (outfile != null) {
-  //   //   _saveResultsToFile(results, outfile);
-  //   // }
-  //   return results;
-  // }
-
-  // void _saveResultsToFile(Map<String, dynamic> results, String filename) {
-  //   File file = File(filename);
-  //   file.writeAsString(json.encode(results));
-  // }
 }
