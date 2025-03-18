@@ -4,7 +4,7 @@
 library;
 
 export "src/ahash.dart";
-export "src/dahash.dart";
+export "src/dhash.dart";
 export "src/hashing_base.dart";
 export "src/phash.dart";
 export "src/utils/hamming.dart";

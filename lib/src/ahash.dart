@@ -1,6 +1,7 @@
 import "dart:typed_data";
 import "package:collection/collection.dart";
 import "package:dartcv4/contrib.dart";
+import 'package:dartcv4/dartcv.dart';
 import "package:dartcv4/imgcodecs.dart";
 import "hashing_base.dart";
 import "utils/dartcv_load.dart";
@@ -40,7 +41,7 @@ class AHash extends Hashing {
   @override
   int hashAlgo(Uint8List imageArray) {
     if (useCV) {
-      return _hashAlgoCV(imageMat);
+      return _hashAlgoCV(imageArray);
     }
     return _hashAlgoNative(imageArray);
   }
@@ -55,7 +56,8 @@ class AHash extends Hashing {
     final imageMat = imdecode(imageArray, IMREAD_UNCHANGED);
     final avgHash = AverageHash();
     final hash = avgHash.compute(imageMat);
-    return hash.toInt(); // TODO: this may not work, check `hash.data -> Uint8List`
+    print(hash.toList());
+    return hash.toString().length; // TODO: this may not work, check `hash.data -> Uint8List`
   }
 }
 

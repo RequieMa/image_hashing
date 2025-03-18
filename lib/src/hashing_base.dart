@@ -4,6 +4,7 @@ import "dart:typed_data";
 import "package:image/image.dart" as img;
 import "utils/image_utils.dart";
 import "utils/logger.dart";
+import "utils/dartcv_load.dart";
 
 final loggerHash = returnLogger("Hashing");
 
@@ -76,6 +77,14 @@ class Hashing {
       }
       return null;
     }
+
+    // initOpenCV().then((_) {
+    //   print("initOpenCV success");
+      
+    // }).catchError((e) {
+    //   loggerHash.severe("initOpenCV failed: ${e.message}");
+    // });
+    
   }
 
   /// Processes the image array through the hashing algorithm and converts the result.
