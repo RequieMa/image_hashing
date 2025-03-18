@@ -6,22 +6,8 @@ import "hashing_base.dart";
 
 
 class PHash extends Hashing {
-  /// Creates an [AHash] instance with optional verbose logging.
-  ///
-  /// [verbose]: When `true`, enables detailed logging for debugging purposes.
-  /// Defaults to `true`.
   PHash({super.verbose = true});
 
-  /// Implements the aHash algorithm for generating perceptual hashes.
-  ///
-  /// This method:
-  /// 1. Calculates the average pixel value from the preprocessed image
-  /// 2. Generates a boolean list where `true` indicates pixels above average
-  /// 3. Converts the boolean list to an integer hash value
-  ///
-  /// [imageArray]: The preprocessed 8x8 grayscale image data as a Uint8List
-  /// 
-  /// Returns an integer representation of the hash value.
   @override
   int hashAlgo(Uint8List imageArray) {
     return _hashAlgoCV(imageMat);

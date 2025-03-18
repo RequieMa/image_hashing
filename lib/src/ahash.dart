@@ -1,8 +1,9 @@
 import "dart:typed_data";
-import 'package:collection/collection.dart';
-import 'package:dartcv4/contrib.dart';
-import 'package:dartcv4/imgcodecs.dart';
+import "package:collection/collection.dart";
+import "package:dartcv4/contrib.dart";
+import "package:dartcv4/imgcodecs.dart";
 import "hashing_base.dart";
+import "utils/dartcv_load.dart";
 
 /// A concrete implementation of the average hash (aHash) algorithm.
 ///
@@ -24,7 +25,7 @@ class AHash extends Hashing {
   ///
   /// [verbose]: When `true`, enables detailed logging for debugging purposes.
   /// Defaults to `true`.
-  AHash({super.verbose = true, this.useMat = false});
+  AHash({super.verbose = true, this.useCV = false});
 
   /// Implements the aHash algorithm for generating perceptual hashes.
   ///
