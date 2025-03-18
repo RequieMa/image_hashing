@@ -1,5 +1,7 @@
 import "dart:typed_data";
 import 'package:collection/collection.dart';
+import 'package:dartcv4/contrib.dart';
+import 'package:dartcv4/imgcodecs.dart';
 import "hashing_base.dart";
 
 /// A concrete implementation of the average hash (aHash) algorithm.
@@ -16,11 +18,13 @@ import "hashing_base.dart";
 /// final hash = hasher.encodeImage("path/to/image.jpg");
 /// ```
 class AHash extends Hashing {
+  final bool useCV;
+
   /// Creates an [AHash] instance with optional verbose logging.
   ///
   /// [verbose]: When `true`, enables detailed logging for debugging purposes.
   /// Defaults to `true`.
-  AHash({super.verbose = true});
+  AHash({super.verbose = true, this.useMat = false});
 
   /// Implements the aHash algorithm for generating perceptual hashes.
   ///
@@ -34,9 +38,23 @@ class AHash extends Hashing {
   /// Returns an integer representation of the hash value.
   @override
   int hashAlgo(Uint8List imageArray) {
+    if (useCV) {
+      return _hashAlgoCV(imageMat);
+    }
+    return _hashAlgoNative(imageArray);
+  }
+
+  int _hashAlgoNative(Uint8List imageArray) {
     final avg = imageArray.average;
     final hashMat = imageArray.map((x) => x >= avg).toList();
     return toIntFromBoolList(hashMat);
+  }
+
+  int _hashAlgoCV(Uint8List imageArray) {
+    final imageMat = imdecode(imageArray, IMREAD_UNCHANGED);
+    final avgHash = AverageHash();
+    final hash = avgHash.compute(imageMat);
+    return hash.toInt(); // TODO: this may not work, check `hash.data -> Uint8List`
   }
 }
 
