@@ -1,5 +1,5 @@
 import "dart:typed_data";
-import "package:collection/collection.dart";
+// import "package:collection/collection.dart";
 // import "package:dartcv4/contrib.dart" as cv;
 // import "package:dartcv4/dartcv.dart";
 // import "package:dartcv4/imgcodecs.dart";
