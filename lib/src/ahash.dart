@@ -1,7 +1,7 @@
 import "dart:typed_data";
 import "package:collection/collection.dart";
 import "package:dartcv4/contrib.dart";
-import 'package:dartcv4/dartcv.dart';
+import "package:dartcv4/dartcv.dart";
 import "package:dartcv4/imgcodecs.dart";
 import "hashing_base.dart";
 import "utils/dartcv_load.dart";
@@ -36,7 +36,7 @@ class AHash extends Hashing {
   /// 3. Converts the boolean list to an integer hash value
   ///
   /// [imageArray]: The preprocessed 8x8 grayscale image data as a Uint8List
-  /// 
+  ///
   /// Returns an integer representation of the hash value.
   @override
   int hashAlgo(Uint8List imageArray) {
@@ -73,7 +73,7 @@ class AHash extends Hashing {
 /// Returns an integer where bits represent the boolean values from first
 /// to last element in the list (big-endian bit order).
 ///
-/// Note: The list length should not exceed 64 elements due to Dart's int size.
+/// Note: The list length should not exceed 64 elements due to Dart"s int size.
 int toIntFromBoolList(List<bool> booleans) {
   var number = 0;
   for (final bool in booleans) {

@@ -1,7 +1,7 @@
 import "package:image_hashing/image_hashing.dart";
-import "dart:ffi";
-import 'dart:io' show Platform, Directory, File;
-import 'package:path/path.dart' as path;
+// import "dart:ffi";
+// import "dart:io" show Platform, Directory, File;
+import "package:path/path.dart" as path;
 
 void main() {
   // print(loadImage("example/example_img/cat.png"));
@@ -12,7 +12,7 @@ void main() {
       isGrayscale: true,
     ),
   );
-  // var libraryPath = path.join(Directory.current.path, 'dartcv.dll');
+  // var libraryPath = path.join(Directory.current.path, "dartcv.dll");
   // final dllFile = File(libraryPath);
   // print(dllFile.path);
   // final dylib = DynamicLibrary.open(dllFile.path);

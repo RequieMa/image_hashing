@@ -81,7 +81,7 @@
 //       }
 //       final dyldFallbackLibraryPath = Platform.environment["DYLD_FALLBACK_LIBRARY_PATH"];
 //       Platform.environment["DYLD_FALLBACK_LIBRARY_PATH"] = "$dyldFallbackLibraryPath:${libraryDir.path}";
-//     } 
+//     }
 //   } else if (Platform.isAndroid || Platform.isIOS) {
 //     if (Platform.isAndroid) {
 //       url = "https://github.com/rainyl/dartcv/releases/download/4.11.0.2/libdartcv-android.tar.gz";
@@ -89,7 +89,7 @@
 //       Platform.environment["PATH"] = "$path;${libraryDir.path}";
 //       libraryPath = "${libraryDir.path}/my_library.dll";
 //       compressedPath = "$directory/my_library.zip";
-//     } 
+//     }
 //     // else if (Platform.isIOS) {
 //     //   url = "https://github.com/rainyl/dartcv/releases/download/4.11.0.2/libdartcv-linux-x64.tar.gz";
 //     //   final ldLibraryPath = Platform.environment["LD_LIBRARY_PATH"];

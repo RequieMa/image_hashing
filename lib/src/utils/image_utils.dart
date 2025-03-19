@@ -4,7 +4,7 @@ import "package:image/image.dart" as img;
 
 Uint8List loadImage(
   String imageFile, {
-  List<int>? targetSize = null,
+  List<int>? targetSize,
   bool isGrayscale = false,
 }) {
   var image = img.decodeImage(File(imageFile).readAsBytesSync());
@@ -13,13 +13,14 @@ Uint8List loadImage(
   }
   image = _convertToRgb(image);
 
-  if (targetSize != null)
+  if (targetSize != null) {
     image = img.copyResize(
       image,
       width: 8,
       height: 8,
       interpolation: img.Interpolation.cubic,
     );
+  }
 
   if (isGrayscale) {
     image = img.grayscale(image);

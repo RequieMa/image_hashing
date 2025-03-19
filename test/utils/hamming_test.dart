@@ -1,5 +1,5 @@
-import "package:test/test.dart";
 import "package:image_hashing/image_hashing.dart";
+import "package:test/test.dart";
 
 void main() {
   group("Hex Hamming Distance Tests", () {

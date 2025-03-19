@@ -1,11 +1,11 @@
 int hammingDistance(String a, String b, {int size = 64}) {
   _validateHex(a);
   _validateHex(b);
-  String hash1Bin = BigInt.parse(
+  final hash1Bin = BigInt.parse(
     a,
     radix: 16,
   ).toRadixString(2).padLeft(size, "0");
-  String hash2Bin = BigInt.parse(
+  final hash2Bin = BigInt.parse(
     b,
     radix: 16,
   ).toRadixString(2).padLeft(size, "0");
