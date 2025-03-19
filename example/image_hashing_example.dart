@@ -12,12 +12,13 @@ void main() {
       isGrayscale: true,
     ),
   );
-  var libraryPath = path.join(Directory.current.path, 'dartcv.dll');
-  final dllFile = File(libraryPath);
-  print(dllFile.path);
-  final dylib = DynamicLibrary.open(dllFile.path);
-  print(dylib);
-  final ahasher = AHash(useCV: true);
+  // var libraryPath = path.join(Directory.current.path, 'dartcv.dll');
+  // final dllFile = File(libraryPath);
+  // print(dllFile.path);
+  // final dylib = DynamicLibrary.open(dllFile.path);
+  // print(dylib);
+  // final ahasher = AHash(useCV: true);
+  final ahasher = AHash(useCV: false);
   print(ahasher);
   final ahash = ahasher.encodeImage("example/example_img/gray21.512.tiff");
   print(ahash);

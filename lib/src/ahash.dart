@@ -40,9 +40,9 @@ class AHash extends Hashing {
   /// Returns an integer representation of the hash value.
   @override
   int hashAlgo(Uint8List imageArray) {
-    if (useCV) {
-      return _hashAlgoCV(imageArray);
-    }
+    // if (useCV) {
+    //   return _hashAlgoCV(imageArray);
+    // }
     return _hashAlgoNative(imageArray);
   }
 
@@ -52,13 +52,13 @@ class AHash extends Hashing {
     return toIntFromBoolList(hashMat);
   }
 
-  int _hashAlgoCV(Uint8List imageArray) {
-    final imageMat = imdecode(imageArray, IMREAD_UNCHANGED);
-    final avgHash = AverageHash();
-    final hash = avgHash.compute(imageMat);
-    print(hash.toList());
-    return hash.toString().length; // TODO: this may not work, check `hash.data -> Uint8List`
-  }
+  // int _hashAlgoCV(Uint8List imageArray) {
+  //   final imageMat = imdecode(imageArray, IMREAD_UNCHANGED);
+  //   final avgHash = AverageHash();
+  //   final hash = avgHash.compute(imageMat);
+  //   print(hash.toList());
+  //   return hash.toString().length; // TODO: this may not work, check `hash.data -> Uint8List`
+  // }
 }
 
 /// Converts a list of boolean values to an integer representation.

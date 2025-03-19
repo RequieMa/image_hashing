@@ -38,51 +38,37 @@ void main() {
 ## 📦 Features
 
 - **Core Feature 1**: Different Hashing Methods
-<!-- - **Example**:
   ```dart
-  final client = ApiClient(config);
-  final response = await client.get('/data');
-  ``` -->
+  final ahasher = AHash();
+  final phasher = PHash();
+  final dhasher = DHash();
+  final whasher = WHash(); // Wavelet Transform Hashing dependency is under development
+  ```
+
+  To encode an image:
+  ```dart
+  final ahasher = AHash(useCV: false); // OpenCV compatibility is under development
+  final ahash = ahasher.encodeImage("YourImageFile");
+  ```
 
 - **Core Feature 2**: Hamming Distances of Image Hashing
-<!-- - **Integration**: Works seamlessly with `package:riverpod`
-  ```dart
-  final provider = Provider((ref) => MyService(ref.watch(otherProvider)));
-  ``` -->
-
----
-
-## ⚙️ Configuration
-
-<!-- ### Custom Options
-```dart
-final config = Config(
-  timeout: Duration(seconds: 30),
-  enableLogging: true,
-);
-```
-
-### Environment Variables
-```bash
-export API_KEY=your_key_here
-``` -->
-
+  
 ---
 
 ## 🧪 Testing
 
-<!-- ```bash
-# Run tests with coverage
-dart test --coverage=./coverage
+Unit tests are under development. Currently only unit tests for hamming distance
+
+```bash
+dart test
 ```
 
-| Metric          | Status                      |
+<!-- | Metric          | Status                      |
 |-----------------|-----------------------------|
 | Test Coverage   | 100% (core logic)           |
-| Static Analysis | Enforced via `pedantic`     |
+| Static Analysis | Enforced via `pedantic`     | -->
 
---- -->
-
+---
 ## 🤝 Contributing
 
 ### Workflow
