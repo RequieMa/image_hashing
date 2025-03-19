@@ -1,10 +1,10 @@
 import "dart:typed_data";
 import "package:collection/collection.dart";
-import "package:dartcv4/contrib.dart";
-import "package:dartcv4/dartcv.dart";
-import "package:dartcv4/imgcodecs.dart";
+// import "package:dartcv4/contrib.dart";
+// import "package:dartcv4/dartcv.dart";
+// import "package:dartcv4/imgcodecs.dart";
 import "hashing_base.dart";
-import "utils/dartcv_load.dart";
+// import "utils/dartcv_load.dart";
 
 /// A concrete implementation of the average hash (aHash) algorithm.
 ///
