@@ -6,6 +6,7 @@ import "package:image/image.dart" as img;
 import "utils/image_utils.dart";
 import "utils/logger.dart";
 
+/// Logger instance for Hashing
 final loggerHash = returnLogger("Hashing");
 
 /// A base class for generating perceptual image hashes.
@@ -86,13 +87,13 @@ class Hashing {
     // });
   }
 
-  /// Processes the image array through the hashing algorithm and converts the result.
+  /// Processes the image array with the hashing algorithm and returns String.
   ///
   /// This method coordinates the hashing process by:
   /// 1. Calling [hashAlgo] to compute the hash value
   /// 2. Converting the numerical result to a hexadecimal string
   ///
-  /// [imageArray]: The processed image data in grayscale 8x8 format as a Uint8List.
+  /// [imageArray]: The image data in grayscale 8x8 format as a Uint8List.
   ///
   /// Returns the hexadecimal hash string representation of the hash value.
   String hashFunc(Uint8List imageArray) {
@@ -105,7 +106,7 @@ class Hashing {
   /// Subclasses must implement this method to provide the specific logic for
   /// converting image pixel data into a hash value.
   ///
-  /// [imageArray]: The processed image data in grayscale 8x8 format as a Uint8List.
+  /// [imageArray]: The image data in grayscale 8x8 format as a Uint8List.
   ///
   /// Returns an integer value representing the computed hash.
   ///
@@ -115,14 +116,14 @@ class Hashing {
     throw UnimplementedError("Subclasses must implement hashAlgo");
   }
 
-  /// Converts a numerical hash value to a 16-character hexadecimal string.
+  /// Converts a numerical hash value to a hexadecimal string.
   ///
   /// The conversion ensures the resulting string is always 16 characters long,
   /// padding with leading zeros if necessary.
   ///
   /// [hashVal]: The integer hash value to convert.
   ///
-  /// Returns the hexadecimal representation as a fixed-length 16-character string.
+  /// Returns the hexadecimal representation as a fixed-length string.
   static String array2Hash(int hashVal) {
     final hexString = hashVal.toRadixString(16);
     return hexString.padLeft(16, "0");

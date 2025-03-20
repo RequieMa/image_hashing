@@ -20,13 +20,22 @@ import "hashing_base.dart";
 /// final hash = hasher.encodeImage("path/to/image.jpg");
 /// ```
 class AHash extends Hashing {
+  /// bool for later use (if I decide to use support OpenCV)
   final bool useCV;
 
   /// Creates an [AHash] instance with optional verbose logging.
   ///
   /// [verbose]: When `true`, enables detailed logging for debugging purposes.
   /// Defaults to `true`.
-  AHash({super.verbose = true, this.useCV = false});
+  AHash({this.useCV = false, super.verbose = true});
+
+  // @override
+  // int hashAlgo(Uint8List imageArray) {
+  //   if (useCV) {
+  //     return _hashAlgoCV(imageArray);
+  //   }
+  //   return _hashAlgoNative(imageArray);
+  // }
 
   /// Implements the aHash algorithm for generating perceptual hashes.
   ///
@@ -40,13 +49,7 @@ class AHash extends Hashing {
   /// Returns an integer representation of the hash value.
   @override
   int hashAlgo(Uint8List imageArray) {
-    // if (useCV) {
-    //   return _hashAlgoCV(imageArray);
-    // }
-    return _hashAlgoNative(imageArray);
-  }
-
-  int _hashAlgoNative(Uint8List imageArray) {
+    // int _hashAlgoNative(Uint8List imageArray) {
     final avg = imageArray.average;
     final hashMat = imageArray.map((x) => x >= avg).toList();
     return toIntFromBoolList(hashMat);

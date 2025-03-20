@@ -1,13 +1,13 @@
 name: image_hashing
 description: A Dart library for generating perceptual hashes (AHash, PHash, DHash, WHash) from images, providing efficient single-image hash computation and comparison.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/RequieMa/image_hashing
 license: BSD-3-Clause
-# documentation: https://pub.dev/documentation/your_package_name # 自动生成
+documentation: https://pub.dev/documentation/image_hashing
 issue_tracker: https://github.com/RequieMa/image_hashing/issues
 
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.6.0
 
 dependencies:
   path: ^1.8.0

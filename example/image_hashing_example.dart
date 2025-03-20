@@ -1,7 +1,7 @@
 import "package:image_hashing/image_hashing.dart";
 // import "dart:ffi";
 // import "dart:io" show Platform, Directory, File;
-import "package:path/path.dart" as path;
+// import "package:path/path.dart" as path;
 
 void main() {
   // print(loadImage("example/example_img/cat.png"));
