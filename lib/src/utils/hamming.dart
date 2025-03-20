@@ -11,11 +11,11 @@
 /// [a]: First hexadecimal string (case-insensitive)
 /// [b]: Second hexadecimal string (case-insensitive)
 /// [size]: Target bit-length for binary conversion (default 64-bit)
-/// 
+///
 /// Returns number of differing bits (Hamming distance)
-/// 
+///
 /// Throws [ArgumentError] if:
-/// - Inputs contain non-hex characters 
+/// - Inputs contain non-hex characters
 int hammingDistance(String a, String b, {int size = 64}) {
   _validateHex(a);
   _validateHex(b);
@@ -35,12 +35,12 @@ int hammingDistance(String a, String b, {int size = 64}) {
 }
 
 /// Validates hexadecimal string format
-/// 
+///
 /// Ensures input only contains valid hex characters (0-9, a-f, A-F)
-/// 
+///
 /// [hex]: String to validate
-/// 
-/// Throws [ArgumentError] if invalid characters found 
+///
+/// Throws [ArgumentError] if invalid characters found
 void _validateHex(String hex) {
   if (!RegExp(r"^[0-9a-fA-F]+$").hasMatch(hex)) {
     throw ArgumentError("Invalid hex characters");
