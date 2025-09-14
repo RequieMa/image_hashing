@@ -1,9 +1,6 @@
 import "dart:core";
-import "dart:io";
 import "dart:typed_data";
 import "package:image/image.dart" as img;
-// import "utils/dartcv_load.dart";
-import "utils/image_utils.dart";
 import "utils/logger.dart";
 
 /// Logger instance for Hashing
@@ -30,61 +27,16 @@ final loggerHash = returnLogger("Hashing");
 /// ```
 class Hashing {
   /// Target size for image preprocessing (width, height)
-  final List<int> targetSize = [8, 8];
-  final bool _verbose;
+  final bool verbose;
 
   /// Creates a [Hashing] instance with optional verbose logging.
   ///
   /// [verbose]: When `true`, enables detailed logging for debugging purposes.
   /// Defaults to `true`.
-  Hashing({bool verbose = true}) : _verbose = verbose;
+  Hashing({this.verbose = true});
 
-  /// Generates a perceptual hash for the image at the given file path.
-  ///
-  /// The image is resized to [targetSize], converted to grayscale, and
-  /// processed through the hashing algorithm defined in [hashAlgo].
-  ///
-  /// [imageFile]: The path to the image file. Must be a valid file system path.
-  ///
-  /// Returns a 16-character hex-hash string, or `null` if processing fails.
-  ///
-  /// Throws:
-  /// - [ArgumentError] if the image file does not exist.
-  /// - [img.ImageException] if image decoding fails.
-  ///
-  /// Example:
-  /// ```dart
-  /// final hasher = Hashing();
-  /// final hash = hasher.encodeImage("path/to/image.jpg");
-  /// if (hash != null) {
-  ///   print("Image hash: $hash");
-  /// }
-  /// ```
-  String? encodeImage(String imageFile) {
-    if (!File(imageFile).existsSync()) {
-      throw ArgumentError("Image file does not exist: $imageFile");
-    }
-
-    try {
-      final image = loadImage(
-        imageFile,
-        targetSize: targetSize,
-        isGrayscale: true,
-      );
-      return hashFunc(image);
-    } on img.ImageException catch (e) {
-      if (_verbose) {
-        loggerHash.severe("Decoding failed: ${e.message}");
-      }
-      return null;
-    }
-
-    // initOpenCV().then((_) {
-    //   print("initOpenCV success");
-
-    // }).catchError((e) {
-    //   loggerHash.severe("initOpenCV failed: ${e.message}");
-    // });
+   String? encodeImage(String imageFile) {
+    throw UnimplementedError("Subclasses must implement encodeImage");
   }
 
   /// Processes the image array with the hashing algorithm and returns String.
@@ -96,9 +48,11 @@ class Hashing {
   /// [imageArray]: The image data in grayscale 8x8 format as a Uint8List.
   ///
   /// Returns the hexadecimal hash string representation of the hash value.
-  String hashFunc(Uint8List imageArray) {
+  String hashFunc(img.Image imageArray) {
+    loggerHash.info("image Array: $imageArray");
     final hashVal = hashAlgo(imageArray);
-    return Hashing.array2Hash(hashVal);
+    loggerHash.info("hash Val: $hashVal");
+    return Hashing.array2Hash(hashVal.first);
   }
 
   /// Abstract method defining the core hashing algorithm.
@@ -106,13 +60,13 @@ class Hashing {
   /// Subclasses must implement this method to provide the specific logic for
   /// converting image pixel data into a hash value.
   ///
-  /// [imageArray]: The image data in grayscale 8x8 format as a Uint8List.
+  /// [image]: The image data in grayscale 8x8 format as a Uint8List.
   ///
   /// Returns an integer value representing the computed hash.
   ///
   /// Throws:
   /// - [UnimplementedError] if not overridden by a subclass.
-  int hashAlgo(Uint8List imageArray) {
+  Uint8List hashAlgo(img.Image image) {
     throw UnimplementedError("Subclasses must implement hashAlgo");
   }
 

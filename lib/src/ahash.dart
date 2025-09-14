@@ -1,10 +1,13 @@
+import "dart:io";
 import "dart:typed_data";
 import "package:collection/collection.dart";
-// import "package:dartcv4/contrib.dart";
-// import "package:dartcv4/dartcv.dart";
-// import "package:dartcv4/imgcodecs.dart";
+import "package:image/image.dart" as img;
 import "hashing_base.dart";
-// import "utils/dartcv_load.dart";
+import "utils/image_utils.dart";
+import "utils/logger.dart";
+
+/// Logger instance for A-Hashing
+final loggerAHash = returnLogger("AHash");
 
 /// A concrete implementation of the average hash (aHash) algorithm.
 ///
@@ -20,22 +23,53 @@ import "hashing_base.dart";
 /// final hash = hasher.encodeImage("path/to/image.jpg");
 /// ```
 class AHash extends Hashing {
-  /// bool for later use (if I decide to use support OpenCV)
-  final bool useCV;
-
   /// Creates an [AHash] instance with optional verbose logging.
   ///
   /// [verbose]: When `true`, enables detailed logging for debugging purposes.
   /// Defaults to `true`.
-  AHash({this.useCV = false, super.verbose = true});
+  AHash({super.verbose = true});
 
-  // @override
-  // int hashAlgo(Uint8List imageArray) {
-  //   if (useCV) {
-  //     return _hashAlgoCV(imageArray);
-  //   }
-  //   return _hashAlgoNative(imageArray);
-  // }
+  /// Generates a perceptual hash for the image at the given file path.
+  ///
+  /// The image is resized to [targetSize], converted to grayscale, and
+  /// processed through the hashing algorithm defined in [hashAlgo].
+  ///
+  /// [imageFile]: The path to the image file. Must be a valid file system path.
+  ///
+  /// Returns a 16-character hex-hash string, or `null` if processing fails.
+  ///
+  /// Throws:
+  /// - [ArgumentError] if the image file does not exist.
+  /// - [img.ImageException] if image decoding fails.
+  ///
+  /// Example:
+  /// ```dart
+  /// final hasher = Hashing();
+  /// final hash = hasher.encodeImage("path/to/image.jpg");
+  /// if (hash != null) {
+  ///   print("Image hash: $hash");
+  /// }
+  /// ```
+  @override
+  String? encodeImage(String imageFile) {
+    if (!File(imageFile).existsSync()) {
+      throw ArgumentError("Image file does not exist: $imageFile");
+    }
+
+    try {
+      final image = loadImage(
+        imageFile,
+        targetSize: [8, 8],
+        isGrayscale: true,
+      );
+      return hashFunc(image);
+    } on img.ImageException catch (e) {
+      if (verbose) {
+        loggerAHash.severe("Decoding failed: ${e.message}");
+      }
+      return null;
+    }
+  }
 
   /// Implements the aHash algorithm for generating perceptual hashes.
   ///
@@ -48,42 +82,11 @@ class AHash extends Hashing {
   ///
   /// Returns an integer representation of the hash value.
   @override
-  int hashAlgo(Uint8List imageArray) {
-    // int _hashAlgoNative(Uint8List imageArray) {
+  Uint8List hashAlgo(img.Image image) {
+    final imageArray = image.toUint8List();
     final avg = imageArray.average;
     final hashMat = imageArray.map((x) => x >= avg).toList();
+    loggerAHash.info("image > Average booleans: $hashMat");
     return toIntFromBoolList(hashMat);
   }
-
-  // int _hashAlgoCV(Uint8List imageArray) {
-  //   final imageMat = imdecode(imageArray, IMREAD_UNCHANGED);
-  //   final avgHash = AverageHash();
-  //   final hash = avgHash.compute(imageMat);
-  //   print(hash.toList());
-  //   return hash.toString().length; // TODO: this may not work, check `hash.data -> Uint8List`
-  // }
-}
-
-/// Converts a list of boolean values to an integer representation.
-///
-/// The conversion follows a left-shift pattern where:
-/// - Each `true` value represents a binary 1
-/// - Each `false` value represents a binary 0
-///
-/// [booleans]: The list of boolean values to convert. Should contain exactly
-/// 64 elements for standard hash implementations (8x8 image).
-///
-/// Returns an integer where bits represent the boolean values from first
-/// to last element in the list (big-endian bit order).
-///
-/// Note: The list length should not exceed 64 elements due to Dart"s int size.
-int toIntFromBoolList(List<bool> booleans) {
-  var number = 0;
-  for (final bool in booleans) {
-    number = number << 1;
-    if (bool) {
-      number = number | 1;
-    }
-  }
-  return number;
 }
